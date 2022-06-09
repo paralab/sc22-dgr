@@ -1,0 +1,60 @@
+# Start from this Docker image
+# Start from this Docker image
+Bootstrap: docker
+From: nvidia/cuda:11.4.0-devel-ubuntu20.04
+
+
+
+%post 
+  # Install general dependencies 
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get -yq clean
+  apt-get -yq update 
+  apt-get -yq install build-essential bash-completion git ssh openmpi-common gsl-bin libblas-dev liblapack-dev liblapacke-dev cmake cmake-curses-gui openmpi-bin libgsl-dev vim
+  
+  
+
+
+  echo "export MAIN=${PWD}" >> /environment
+
+
+  apt-get install -y python3.9
+  apt-get install -y python3-pip
+
+  # Install python packages
+  pip3 install --no-cache-dir --upgrade pip
+  pip3 install --no-cache-dir --upgrade sympy numpy numba git+https://github.com/moble/quaternion git+https://github.com/moble/spherical_functions cogapp quadpy
+
+  cd /usr/local/cuda/lib64/stubs
+  ln -s libcuda.so libcuda.so.1
+
+  export CUDA_DIR=/usr/local/cuda/
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CUDA_DIR}/lib64/
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CUDA_DIR}/lib64/stubs/
+  
+    
+%runscript
+  
+  # build dendro-gr
+  mkdir -p sc22-dgr && cd sc22-dgr
+  git init
+  git remote add origin https://github.com/paralab/sc22-dgr.git
+  git fetch origin
+  git checkout -b main --track origin/main
+  #git clone https://github.com/paralab/sc22-dgr.git
+  mkdir -p build_gpu && cd build_gpu
+  cmake ../. -DWITH_CUDA=ON
+  make bssnSolverCtx bssnSolverCUDA -j4
+  cp ../BSSN_GR/pars/*.json . 
+  mkdir -p cp vtu dat
+  
+  
+  
+   
+     
+  
+
+  
+
+
+
