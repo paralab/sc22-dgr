@@ -199,11 +199,7 @@ Dendro supports finite element computations, currently Continous Galerkin (CG) M
 
 Simple Laplace equation using FEM can be found in `FEM/examples/src/heatEq.cpp` file. 
 
-## Publications
-* Milinda Fernando, David Neilsen, Hyun Lim, Eric Hirschmann, Hari Sundar, ”Massively Parallel Simulations of Binary Black Hole Intermediate-Mass-Ratio Inspirals” SIAM Journal on Scientific Computing 2019. 'https://doi.org/10.1137/18M1196972'
-* Milinda Fernando, David Neilsen, Eric Hirschmann, Hari Sundar, ”A scalable framework for Adaptive Computational General Relativity on Heterogeneous Clusters”, (ACM International Conference on Supercomputing, ICS’19)
-* Milinda Fernando, Dmitry Duplyakin, and Hari Sundar. 2017. ”Machine and Application Aware Partitioning for Adaptive Mesh Refinement Applications”. In Proceedings of the 26th International Symposium on High-Performance Parallel and Distributed Computing (HPDC ’17). ACM, New York, NY, USA, 231-242. DOI: 'https://doi.org/10.1145/3078597.3078610'
-* Masado Ishii, Milinda Fernando, Kumar Saurabh, Biswajit Khara, Baskar Ganapathysubramanian, and Hari Sundar. 2019. Solving PDEs in space-time: 4D tree-based adaptivity, mesh-free and matrix-free approaches. In Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis (SC ’19). Association for Computing Machinery, New York, NY, USA, Article 61, 1–61. DOI:https://doi.org/10.1145/3295500.3356198 
+
 
 
 
