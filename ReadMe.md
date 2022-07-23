@@ -7,13 +7,16 @@ with a node-local code generator. Dendro-GR framework achieve excellent performa
 
 
 ***
-## Get Dendro
-Dendro framework is an open-source scalable octree algorithms suite, designed to solve partial differential equations using Galerkin, finite difference, finite volume discretization methods. If you are interested in using Dendro please let us know how can we help. You can clone the repository using , `git clone https://github.com/paralab/Dendro-5.0.git`
+## Get Dendro-GR
+Dendro framework is an open-source scalable octree algorithms suite, designed to solve partial differential equations using Galerkin, finite difference, finite volume discretization methods. If you are interested in using Dendro please let us know how can we help. You can clone the repository using , 
+
+* Get Dendro-5.01 : `git clone https://github.com/paralab/Dendro-5.01.git`
+* Get Dendro-GR  : `git cline https://github.com/paralab/Dendro-GR.git` 
 
 ## Code generation dependancies
 pip3 install --user sympy numpy numba git+https://github.com/moble/quaternion git+https://github.com/moble/spherical_functions cogapp quadpy
 
-## How to build Dendro-5.0 ?
+## How to build Dendro-GR ?
 
 To build Dendro-5.0, you need following externeral packages, 
 * C/C++11 or higher, (tested with GNU and Intel compilers)
