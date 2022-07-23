@@ -7,7 +7,7 @@
     "DENDRO_VERSION": 5.0,
     "__comment__" : "============== IO =====================================",
             "           " : "Set to 1 restore solver from a checkpoint",
-            "BSSN_RESTORE_SOLVER":1,
+            "BSSN_RESTORE_SOLVER":0,
             "           " : "frequency for VTU output",
             "BSSN_IO_OUTPUT_FREQ": 12000,
             "           " : "frequency for remeshing test based on wavelets",
