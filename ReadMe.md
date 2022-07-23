@@ -37,7 +37,7 @@ $ make bssnSolverCtx bssnSolverCUDA tpid -j4
 ```
 
 * Note that that, `-DWITH CUDA=ON` build code for both CPU and GPU, while `-DWITH CUDA=OFF` compilation only happens for the CPU code.
-* The above will build three targets in <build dir>/BSSN GR/ folder these corresponds to CPU BSSN Solver, GPU BSSN Solver and two punctures initial condition solver for the binary black hole problem.
+* The above will build three targets in <build dir>/BSSN_GR/ folder these corresponds to CPU BSSN Solver, GPU BSSN Solver and two punctures initial condition solver for the binary black hole problem.
 
 ## Singularity container
 
@@ -51,14 +51,14 @@ singularity run dgr-cuda dgr.def
 
 ### Binary mergers and GWs
 * The parameters for the applications has to be provided with .json file. Example parameter files for mass ratios 1, 2, and 4 can be found in BSSN GR/pars folder.
-   * `BSSN GR/pars/q1.par.json` : q=1 binary black hole merger
-   * `BSSN GR/pars/q2.par.json` : q=2 binary black hole merger
-   * `BSSN GR/pars/q4.par.json` : q=4 binary black hole merger
+   * `BSSN_GR/pars/q1.par.json` : q=1 binary black hole merger
+   * `BSSN_GR/pars/q2.par.json` : q=2 binary black hole merger
+   * `BSSN_GR/pars/q4.par.json` : q=4 binary black hole merger
    
 * Create the following folders in the relative path to the BSSN executable.
    * `vtu` - VTU folder where the solution is written with parallel VTU file format, in the frequency specified by the parameter file (i.e., BSSN IO OUTPUT FREQ).
    * `cp` - checkpoint folder where the checkpoints are stored in the frequency specified by the parameter file (i.e., BSSN CHECKPT FREQ).
-   * `dat` - dat - Data files, diagnostics data on the binary. Requested modes (i.e., "BSSN GW L MODES": [2,3,4]) of the gravitational waves are extracted by the observers specified by "BSSN GW RADAII": [50,60,70,80,90,100]
+   * `dat` - dat - Data files, diagnostics data on the binary. Requested modes (i.e., "BSSN_GW_L_MODES": [2,3,4]) of the gravitational waves are extracted by the observers specified by "BSSN_GW_RADAII": [50,60,70,80,90,100]
    
 * `tpid`: First run the tpid solver with the chosen parameter file. The above will solve for the initial condition for the binary using Two puncture gauge.
 * Once the tpid solver is finished, user can launch the BSSN solver bssnSolverCUDA or bssnSolverCtx for GPU and CPU versions respectively.
@@ -70,13 +70,13 @@ $ mpirun -np <number of GPUs> ./BSSN_GR/bssnSolverCUDA q1.par.json 1
 
 ### GPU and CPU experiments
 
-Additional scripts files for conducted experiments are presented in the `<source dir>/BSSN GR/experiment_scripts/ls6` folder.
+Additional scripts files for conducted experiments are presented in the `<source dir>/BSSN_GR/experiment_scripts/ls6` folder.
 *  `q1-ss` : GPU/CPU strong scaling experimental scripts.
 *  `q1-ws` : GPU weak scaling experimental scripts.
-*  Weak scaling: make bssnWSTestCUDA and use bssnWTestCUDA for weak scaling on GPUs. Use `mpirun -np <number of GPUs> ./BSSN GR/bssnWSTestCUDA q1 ws.par.json 1`
+*  Weak scaling: make bssnWSTestCUDA and use bssnWTestCUDA for weak scaling on GPUs. Use `mpirun -np <number of GPUs> ./BSSN_GR/bssnWSTestCUDA q1_ws.par.json 1`
 *  Strong scaling: Use the parameter file in `BSSN GR/pars/scaling/q1_r2.2.par.json`. 
-   * CPU : `mpirun -np <number of CPUs> ./BSSN GR/bssnSolverCtx q1_r2.2.par.json 1`
-   * GPU : `mpirun -np <number of GPUs> ./BSSN GR/bssnSolverCUDA q1 r2.2.par.json 1`
+   * CPU : `mpirun -np <number of CPUs> ./BSSN_GR/bssnSolverCtx q1_r2.2.par.json 1`
+   * GPU : `mpirun -np <number of GPUs> ./BSSN_GR/bssnSolverCUDA q1_r2.2.par.json 1`
    
 * Experiments on `Octant to Patch` and `Patch to Octant` : `make run_meshgpu_tests` to build the benchmark for padding zone computation. Note that this will built the executable in `<source dir>/build` folder. The parameters should be specified in the order and corresponds to, 
    *  maximum allowed depth of the octree, tolerance value for refinement, partition tolerance (recommend to keep it at 0.1), order of interpola tion for each octant (all the experiments used 6 order interpolations in the paper), flag 0 for CPU padding zone computations, flag 1 for GPU padding zone computations.
