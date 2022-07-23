@@ -78,10 +78,10 @@ Additional scripts files for conducted experiments are presented in the `<source
    * CPU : `mpirun -np <number of CPUs> ./BSSN GR/bssnSolverCtx q1_r2.2.par.json 1`
    * GPU : `mpirun -np <number of GPUs> ./BSSN GR/bssnSolverCUDA q1 r2.2.par.json 1`
    
-* Experiments on `Octant to Patch` and `Patch to Octant` : `make run meshgpu tests` to build the benchmark for padding zone computation. Note that this will built the executable in `<source dir>/build` folder. The parameters should be specified in the order and corresponds to, 
+* Experiments on `Octant to Patch` and `Patch to Octant` : `make run_meshgpu_tests` to build the benchmark for padding zone computation. Note that this will built the executable in `<source dir>/build` folder. The parameters should be specified in the order and corresponds to, 
    *  maximum allowed depth of the octree, tolerance value for refinement, partition tolerance (recommend to keep it at 0.1), order of interpola tion for each octant (all the experiments used 6 order interpolations in the paper), flag 0 for CPU padding zone computations, flag 1 for GPU padding zone computations.
-   *  CPU tests `mpirun -np <number of CPUs> ./run meshgpu tests 8 1e-3 0.1 6 0`
-   *  GPU tests `mpirun -np <number of CPUs> ./run meshgpu tests 8 1e-3 0.1 6 1`
+   *  CPU tests `mpirun -np <number of CPUs> ./run_meshgpu_tests 8 1e-3 0.1 6 0`
+   *  GPU tests `mpirun -np <number of CPUs> ./run_meshgpu_tests 8 1e-3 0.1 6 1`
    
 ### Running experiments with Singularity
 If you built Dendro-GR with Singularity, the following command can be used to launch the main BSSN solver and other benchmarks. 
