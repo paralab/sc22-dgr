@@ -241,47 +241,48 @@ int main (int argc, char** argv)
           bssn::BSSN_REMESH_TEST_FREQ=bssn::BSSN_REMESH_TEST_FREQ_AFTER_MERGER;  
           bssn::BSSN_GW_EXTRACT_FREQ  = bssn::BSSN_GW_EXTRACT_FREQ_AFTER_MERGER;
         }
-         
-
-        if( (step % bssn::BSSN_REMESH_TEST_FREQ) == 0 )
-        {
-            bool isRemesh = bssnCtx->is_remesh();
-            if(isRemesh)
-            {
-              if(!rank_global)
-                  std::cout<<"[ETS] : Remesh is triggered.  \n";
-
-              bssnCtx->remesh_and_gridtransfer(bssn::BSSN_DENDRO_GRAIN_SZ, bssn::BSSN_LOAD_IMB_TOL,bssn::BSSN_SPLIT_FIX);
-              bssn::deallocate_bssn_deriv_workspace();
-              bssn::allocate_bssn_deriv_workspace(bssnCtx->get_mesh(),1);
-              ets->sync_with_mesh();
-
-              ot::Mesh* pmesh = bssnCtx->get_mesh();
-              unsigned int lmin, lmax;
-              pmesh->computeMinMaxLevel(lmin,lmax);
-              if(!pmesh->getMPIRank())
-                printf("post merger grid level = (%d, %d)\n",lmin,lmax);
-              bssn::BSSN_RK45_TIME_STEP_SIZE=bssn::BSSN_CFL_FACTOR*((bssn::BSSN_COMPD_MAX[0]-bssn::BSSN_COMPD_MIN[0])*((1u<<(m_uiMaxDepth-lmax))/((double) bssn::BSSN_ELE_ORDER))/((double)(1u<<(m_uiMaxDepth))));
-              ts::TSInfo ts_in = bssnCtx->get_ts_info();
-              ts_in._m_uiTh = bssn::BSSN_RK45_TIME_STEP_SIZE;
-              bssnCtx->set_ts_info(ts_in);
-              
-            }
-        }
-
-        if((step % bssn::BSSN_GW_EXTRACT_FREQ) == 0 )
-        {
-          if(!rank_global)
-            std::cout<<"[ETS] : Executing step :  "<<ets->curr_step()<<"\tcurrent time :"<<ets->curr_time()<<"\t dt:"<<ets->ts_size()<<"\t"<<std::endl;
-          
-          bssnCtx->terminal_output();  
-          bssnCtx->write_vtu();
-          bssnCtx->evolve_bh_loc(bssnCtx->get_evolution_vars(),ets->ts_size()*bssn::BSSN_GW_EXTRACT_FREQ);
-
-        }
         
-        if( (step % bssn::BSSN_CHECKPT_FREQ) == 0 )
-          bssnCtx->write_checkpt();
+        #ifndef BSSN_PROFILE_SCALING_RUN
+          if( (step % bssn::BSSN_REMESH_TEST_FREQ) == 0 )
+          {
+              bool isRemesh = bssnCtx->is_remesh();
+              if(isRemesh)
+              {
+                if(!rank_global)
+                    std::cout<<"[ETS] : Remesh is triggered.  \n";
+
+                bssnCtx->remesh_and_gridtransfer(bssn::BSSN_DENDRO_GRAIN_SZ, bssn::BSSN_LOAD_IMB_TOL,bssn::BSSN_SPLIT_FIX);
+                bssn::deallocate_bssn_deriv_workspace();
+                bssn::allocate_bssn_deriv_workspace(bssnCtx->get_mesh(),1);
+                ets->sync_with_mesh();
+
+                ot::Mesh* pmesh = bssnCtx->get_mesh();
+                unsigned int lmin, lmax;
+                pmesh->computeMinMaxLevel(lmin,lmax);
+                if(!pmesh->getMPIRank())
+                  printf("post merger grid level = (%d, %d)\n",lmin,lmax);
+                bssn::BSSN_RK45_TIME_STEP_SIZE=bssn::BSSN_CFL_FACTOR*((bssn::BSSN_COMPD_MAX[0]-bssn::BSSN_COMPD_MIN[0])*((1u<<(m_uiMaxDepth-lmax))/((double) bssn::BSSN_ELE_ORDER))/((double)(1u<<(m_uiMaxDepth))));
+                ts::TSInfo ts_in = bssnCtx->get_ts_info();
+                ts_in._m_uiTh = bssn::BSSN_RK45_TIME_STEP_SIZE;
+                bssnCtx->set_ts_info(ts_in);
+                
+              }
+          }
+
+          if((step % bssn::BSSN_GW_EXTRACT_FREQ) == 0 )
+          {
+            if(!rank_global)
+              std::cout<<"[ETS] : Executing step :  "<<ets->curr_step()<<"\tcurrent time :"<<ets->curr_time()<<"\t dt:"<<ets->ts_size()<<"\t"<<std::endl;
+            
+            bssnCtx->terminal_output();  
+            bssnCtx->write_vtu();
+            bssnCtx->evolve_bh_loc(bssnCtx->get_evolution_vars(),ets->ts_size()*bssn::BSSN_GW_EXTRACT_FREQ);
+
+          }
+        
+          if( (step % bssn::BSSN_CHECKPT_FREQ) == 0 )
+            bssnCtx->write_checkpt();
+        #endif
         
         ets->evolve();
       }

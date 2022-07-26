@@ -30,7 +30,7 @@ endif()
 
 option(USE_64BIT_INDICES "Use 64-Bit indices. Reverts to 32-bit if turned off" ON)
 option(HILBERT_ORDERING "Use Hilbert ordering instead of Morton" ON)
-option(RUN_WEAK_SCALING "Run Entire Weak Scaling" ON)
+option(RUN_WEAK_SCALING "Run Entire Weak Scaling" OFF)
 option(ALLTOALLV_FIX "Use K-way all to all v" OFF)
 option(SPLITTER_SELECTION_FIX "Turn on Splitter Selection fix" OFF)
 option(DIM_2 "use the two dimentional sorting" OFF)

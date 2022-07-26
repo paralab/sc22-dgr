@@ -21,6 +21,7 @@
 #include "mathUtils.h"
 #include <fstream>
 #include <ctime>
+#include "bssnCtx.h"
 
 int bssn_driver(MPI_Comm comm, unsigned int num_step,unsigned int warm_up, std::ostream& outfile,unsigned int ts_mode)
 {
@@ -119,8 +120,8 @@ int bssn_driver(MPI_Comm comm, unsigned int num_step,unsigned int warm_up, std::
       }
       #endif
 
-      if( step == 0 )
-        bssnCtx -> write_checkpt();
+      // if( step == 0 )
+      //   bssnCtx -> write_checkpt();
         
 
       bssn::BSSN_CURRENT_RK_COORD_TIME = step;
@@ -410,13 +411,11 @@ int main (int argc, char** argv)
 
     const unsigned int NUM_WARM_UP=2;
     const unsigned int NUM_STEPS  =1;
-
     std::ofstream outfile;
-    char fname [256];
-    sprintf(fname, "bssnCtx_WS_%d.txt",npes); 
-    
     if(!rank)
     {
+      char fname [256];
+      sprintf(fname, "bssnCtx_WS_%d.txt",npes);
       outfile.open(fname, std::ios_base::app);
       time_t now = time(0);
       // convert now to string form

@@ -197,8 +197,12 @@ namespace bssn
             this->unzip(m_evar,m_evar_unz,bssn::BSSN_ASYNC_COMM_K);
             m_evar_unz.to_2d(unzipVar);
             //isRefine=this->is_remesh();
-            // enforce WMAR refinement based refinement initially. 
-            isRefine = bssn::isReMeshWAMR(m_uiMesh,(const double **)unzipVar,refineVarIds,bssn::BSSN_NUM_REFINE_VARS,waveletTolFunc,bssn::BSSN_DENDRO_AMR_FAC);
+            // enforce WMAR refinement based refinement initially.
+            #ifdef BSSN_DISABLE_INITIAL_GRID_REFINEMENT
+                isRefine = false;
+            #else 
+                isRefine = bssn::isReMeshWAMR(m_uiMesh,(const double **)unzipVar,refineVarIds,bssn::BSSN_NUM_REFINE_VARS,waveletTolFunc,bssn::BSSN_DENDRO_AMR_FAC);
+            #endif
             if(isRefine)
             {
                 ot::Mesh* newMesh = this->remesh(bssn::BSSN_DENDRO_GRAIN_SZ, bssn::BSSN_LOAD_IMB_TOL,bssn::BSSN_SPLIT_FIX);
