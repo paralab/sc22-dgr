@@ -1,4 +1,4 @@
-<img src="https://github.com/paralab/Dendro-5.01/blob/master/docs/fig/dendro.png" alt="Dendro" width="100"/><span style="font-family:Papyrus; font-size:4em;">-GR</span>
+<img src="dendro.png" alt="Dendro" width="100"/><span style="font-family:Papyrus; font-size:4em;">-GR</span>
 
 ## What is Dendro-GR ?
 
@@ -14,7 +14,7 @@ Dendro framework is an open-source scalable octree algorithms suite, designed to
 * Get Dendro-GR  : `git cline https://github.com/paralab/Dendro-GR.git` 
 
 ## Code generation dependancies
-pip3 install --user sympy numpy numba git+https://github.com/moble/quaternion git+https://github.com/moble/spherical_functions cogapp quadpy
+`pip3 install --user sympy numpy numba git+https://github.com/moble/quaternion git+https://github.com/moble/spherical_functions cogapp quadpy`
 
 ## How to build Dendro-GR ?
 
@@ -26,18 +26,22 @@ To build Dendro-5.0, you need following externeral packages,
 * Pyhton packages for code generation, `pip3 install --user sympy numpy numba git+https://github.com/moble/quaternion git+https://github.com/moble/spherical_functions cogapp quadpy`
 * PETSc if building with FEM (CG/DG) support. 
 
-To build the code please use the following commands. 
+To build the code please use the following commands. Please set the following environment variables. 
+* `export CC=<command for C compiler suite>`
+* `export CXX=<command for C++ compiler suite>`
+* `export GSL_ROOT_DIR=<GSL home directory>`
+* For scalability experiments please set the following cmake flags `-DBSSN_DISABLE_INITIAL_GRID_REFINEMENT=ON` and `-DBSSN_PROFILE_SCALING_RUN=ON`
+* `-DWITH_CUDA=ON` build code for both CPU and GPU. Note that for GPU solvers you will need to set `-DOCT2BLK_COARSEST_LEV=31`. The above flag will create sequence of patches with single octant per patch.
+* The above will build targets in `<source dir>/<build dir>/BSSN_GR` folder.
+* For production runs please configure cmake with `cmake -DWITH_CUDA=ON -DOCT2BLK_COARSEST_LEV=31 ../` for GPUs. 
 
 ```
 $cd <path to root source dir >
 $ mkdir build
 $ cd build
-$ cmake ../
-$ make bssnSolverCtx bssnSolverCUDA tpid -j4
+$ cmake -DBSSN_DISABLE_INITIAL_GRID_REFINEMENT=ON -DBSSN_PROFILE_SCALING_RUN=ON -DWITH_CUDA=ON -DOCT2BLK_COARSEST_LEV=31 ../
+$ make bssnSolverCtx bssnSolverCUDA tpid bssnWSTestCUDA -j4
 ```
-
-* Note that that, `-DWITH CUDA=ON` build code for both CPU and GPU, while `-DWITH CUDA=OFF` compilation only happens for the CPU code.
-* The above will build three targets in <build dir>/BSSN GR/ folder these corresponds to CPU BSSN Solver, GPU BSSN Solver and two punctures initial condition solver for the binary black hole problem.
 
 ## Singularity container
 
@@ -55,9 +59,9 @@ singularity run dgr-cuda dgr.def
    * `BSSN GR/pars/q2.par.json` : q=2 binary black hole merger
    * `BSSN GR/pars/q4.par.json` : q=4 binary black hole merger
    
-* Create the following folders in the relative path to the BSSN executable.
+* Create the following folders in the relative path to the BSSN executable (or you will have to put the full paths in the parameter files used for the corresponding execution).
    * `vtu` - VTU folder where the solution is written with parallel VTU file format, in the frequency specified by the parameter file (i.e., BSSN IO OUTPUT FREQ).
-   * `cp` - checkpoint folder where the checkpoints are stored in the frequency specified by the parameter file (i.e., BSSN CHECKPT FREQ).
+   * `cp`  - Checkpoint folder where the checkpoints are stored in the frequency specified by the parameter file (i.e., BSSN CHECKPT FREQ).
    * `dat` - dat - Data files, diagnostics data on the binary. Requested modes (i.e., "BSSN GW L MODES": [2,3,4]) of the gravitational waves are extracted by the observers specified by "BSSN GW RADAII": [50,60,70,80,90,100]
    
 * `tpid`: First run the tpid solver with the chosen parameter file. The above will solve for the initial condition for the binary using Two puncture gauge.
@@ -70,13 +74,14 @@ $ mpirun -np <number of GPUs> ./BSSN_GR/bssnSolverCUDA q1.par.json 1
 
 ### GPU and CPU experiments
 
-Additional scripts files for conducted experiments are presented in the `<source dir>/BSSN GR/experiment_scripts/ls6` folder.
-*  `q1-ss` : GPU/CPU strong scaling experimental scripts.
-*  `q1-ws` : GPU weak scaling experimental scripts.
-*  Weak scaling: make bssnWSTestCUDA and use bssnWTestCUDA for weak scaling on GPUs. Use `mpirun -np <number of GPUs> ./BSSN GR/bssnWSTestCUDA q1 ws.par.json 1`
-*  Strong scaling: Use the parameter file in `BSSN GR/pars/scaling/q1_r2.2.par.json`. 
-   * CPU : `mpirun -np <number of CPUs> ./BSSN GR/bssnSolverCtx q1_r2.2.par.json 1`
-   * GPU : `mpirun -np <number of GPUs> ./BSSN GR/bssnSolverCUDA q1 r2.2.par.json 1`
+Additional scripts files for conducted experiments are presented in the `<source dir>/BSSN_GR/experiment_scripts/ls6` folder.
+*  `q1-ss` : GPU/CPU strong scaling experimental SLURM scripts.
+*  `q1-ws` : GPU weak scaling experimental SLURM scripts.
+*  Weak scaling: make bssnWSTestCUDA and use bssnWTestCUDA for weak scaling on GPUs. Use `mpirun -np <number of GPUs> ./BSSN GR/bssnWSTestCUDA q1_ws.par.json 1`. User can set the `BSSN_DENDRO_GRAIN_SZ` variable in the parameter file to control the approximate number of octants per core to be used in the weak scalability study. 
+   *  For CPU weak scaling the detailed profile output will be written in the `bssnCtx_WS_<number of CPUS>.txt` file, while for GPU runs these will be written in `bssnCtxGPU_WS_<number of CPUS>.txt` file. 
+*  Strong scaling: Use the parameter file in `BSSN_GR/pars/scaling/q1_r2.2.par.json`.
+   * CPU : `mpirun -np <number of CPUs> ./BSSN_GR/bssnSolverCtx q1_r2.2.par.json 1` . The results are written in the `bssnCtx_<number of CPUs>.txt` file created relative to the executable directory. 
+   * GPU : `mpirun -np <number of GPUs> ./BSSN_GR/bssnSolverCUDA q1_r2.2.par.json 1`. The results are written in the `bssnCtxGPU_<number of CPUs>.txt` file created relative to the executable directory. 
    
 * Experiments on `Octant to Patch` and `Patch to Octant` : `make run_meshgpu_tests` to build the benchmark for padding zone computation. Note that this will built the executable in `<source dir>/build` folder. The parameters should be specified in the order and corresponds to, 
    *  maximum allowed depth of the octree, tolerance value for refinement, partition tolerance (recommend to keep it at 0.1), order of interpola tion for each octant (all the experiments used 6 order interpolations in the paper), flag 0 for CPU padding zone computations, flag 1 for GPU padding zone computations.
@@ -87,9 +92,16 @@ Additional scripts files for conducted experiments are presented in the `<source
 If you built Dendro-GR with Singularity, the following command can be used to launch the main BSSN solver and other benchmarks. 
 
 ```
-singularity exec dgr-cuda \
-sc22-dgr/build_gpu/BSSN_GR/./bssnSolverCtx sc22-dgr/build_gpu/q1.par.json 1
+singularity exec dgr-cuda sc22-dgr/build_gpu/BSSN_GR/./bssnSolverCtx sc22-dgr/build_gpu/q1.par.json 1
 ```
+
+With using MPI you can execute,
+* When using GPUs you will need to set appropriate MPI tasks per node, to match with number of GPUs per node.  
+* For strong scalability with CPUs, run `mpirun -n <NUMBER_OF_RANKS> singularity exec dgr-cuda sc22-dgr/build_gpu/BSSN_GR/./bssnSolverCtx sc22-dgr/build_gpu/q1_r2.2.par.json 1`
+* For strong scalability with GPUs, run `mpirun -n <NUMBER_OF_RANKS> singularity exec dgr-cuda sc22-dgr/build_gpu/BSSN_GR/./bssnSolverCUDA sc22-dgr/build_gpu/q1_r2.2.par.json 1`
+* For GPU weak scalability, run `mpirun -n <NUMBER_OF_RANKS> singularity exec dgr-cuda sc22-dgr/build_gpu/BSSN_GR/./bssnWSTestCUDA sc22-dgr/build_gpu/q1_ws.par.json 1`
+
+
 
 ## BSSNOK formulation
 
@@ -98,7 +110,7 @@ Dendro-GR consists of sympy based code generation framework ([SympyGR](https://g
 ## Simple Example: Nonlinear Sigma Model (NLSigma)
 NlSigma folder consists of simple, non lineat wave equation with adaptive mesh refinement (AMR). You can copy the parameter file from `NLSigma/par` folder and simply run `mpirun -np 8 ./NLSigma/nlsmSolver nlsm.par.json`, on  your lattop to large supercomputer with higher resolution. 
 
-|<img src="https://github.com/paralab/Dendro-5.01/blob/master/docs/fig/nlsmB7.png" alt="nlsm" width="200"/> |<img src="https://github.com/paralab/Dendro-5.01/blob/master/docs/fig/nlsmB11.png" alt="nlsm" width="200"/> | <img src="https://github.com/paralab/Dendro-5.01/blob/master/docs/fig/nlsmB16.png" alt="nlsm" width="200"/> | <img src="https://github.com/paralab/Dendro-5.01/blob/master/docs/fig/nlsmB44.png" alt="nlsm" width="200"/> |
+|<img src="fig/nlsmB7.png" alt="nlsm" width="200"/> |<img src="fig/nlsmB11.png" alt="nlsm" width="200"/> | <img src="fig/nlsmB16.png" alt="nlsm" width="200"/> | <img src="fig/nlsmB44.png" alt="nlsm" width="200"/> |
 
 You can write the equations in symbolic python which generate the C compute kernel. Look at `nlsm.py` 
 
