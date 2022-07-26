@@ -45,7 +45,7 @@
 
     "__comment__" : "========== LOAD BALANCING & MESH ======================",
             "           " : "grain size N/p , Where N number of total octants, p number of active cores",
-            "BSSN_DENDRO_GRAIN_SZ": 16000,
+            "BSSN_DENDRO_GRAIN_SZ": 1000,
             "           " : "variable group size for the asynchronous unzip operation",
             "BSSN_ASYNC_COMM_K": 2,
             "           " : "dendro coarsening factor, corsent if computed wavelet tol < BSSN_DENDRO_AMR_FAC*BSSN_WAVELET_TOL ",
@@ -55,7 +55,7 @@
             "           " : "dimentionality of the octree, (meshing is supported only for 3D)",
             "BSSN_DIM": 3,
             "           " : "maximum level of refinement of the mesh",
-            "BSSN_MAXDEPTH": 14,
+            "BSSN_MAXDEPTH": 12,
             "           " : "minimum level of refinement of the mesh",
             "BSSN_MINDEPTH": 3,
     "__comment__" : "=======================================================",
@@ -110,7 +110,7 @@
 
     "__comment__" : "========== BLOCK Adaptivity (Not Recommended use AMR) ====",
             "           " : "Set to 1 disable AMR and use block adaptivity (not recomended). ",
-            "BSSN_ENABLE_BLOCK_ADAPTIVITY":1,
+            "BSSN_ENABLE_BLOCK_ADAPTIVITY":0,
             "BSSN_BLK_MIN_X": -6.0,
             "BSSN_BLK_MIN_Y": -6.0,
             "BSSN_BLK_MIN_Z": -1.0,

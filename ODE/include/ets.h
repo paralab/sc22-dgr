@@ -64,7 +64,7 @@ namespace ts
                 void reset_pt()
                 {
                     for(unsigned int i=0; i < m_uiCtxpt.size(); i++)
-                        m_uiCtxpt[i].snapreset();
+                        m_uiCtxpt[i].clear();
 
                     m_uiAppCtx->reset_pt();
                 }

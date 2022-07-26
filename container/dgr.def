@@ -44,7 +44,7 @@ From: nvidia/cuda:11.4.0-devel-ubuntu20.04
   #git clone https://github.com/paralab/sc22-dgr.git
   mkdir -p build_gpu && cd build_gpu
   cmake -DBSSN_DISABLE_INITIAL_GRID_REFINEMENT=ON -DBSSN_PROFILE_SCALING_RUN=ON -DWITH_CUDA=ON -DOCT2BLK_COARSEST_LEV=31 ../.
-  make bssnSolverCtx bssnSolverCUDA tpid bssnWSTestCUDA -j4
+  make bssnSolverCtx bssnSolverCUDA tpid bssnWSTestCUDA bssnScalingTest -j4
   cp ../BSSN_GR/pars/*.json .
   cp ../BSSN_GR/experiment_scripts/ls6/q1-ws/*.sh . 
   cp ../BSSN_GR/experiment_scripts/ls6/q1-ss/*.sh . 

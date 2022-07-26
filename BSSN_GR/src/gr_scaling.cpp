@@ -133,7 +133,6 @@ int bssn_driver(MPI_Comm comm, unsigned int num_step,unsigned int warm_up, std::
       if(!rank_global)
         std::cout<<"[ETS] : Executing step :  "<<ets->curr_step()<<"\tcurrent time :"<<ets->curr_time()<<"\t dt:"<<ets->ts_size()<<"\t"<<std::endl;
 
-      MPI_Barrier(comm);
     }
 
     #if defined __PROFILE_ETS__  && __PROFILE_CTX__
@@ -409,8 +408,8 @@ int main (int argc, char** argv)
     double t_stat;
     double t_stat_g[3];
 
-    const unsigned int NUM_WARM_UP=2;
-    const unsigned int NUM_STEPS  =1;
+    const unsigned int NUM_WARM_UP=0;
+    const unsigned int NUM_STEPS  =5;
     std::ofstream outfile;
     if(!rank)
     {

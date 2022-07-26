@@ -140,7 +140,7 @@ namespace ts
                 void reset_pt()
                 {
                     for(unsigned int i=0; i < m_uiPt.size(); i++)
-                        m_uiPt[i].snapreset();
+                        m_uiPt[i].clear();
 
                     m_uiAppCtx->reset_pt();
                 }
