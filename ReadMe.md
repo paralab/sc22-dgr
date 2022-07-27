@@ -67,8 +67,8 @@ Executables for the CPU/GPU scaling experiments can be summarized as follows.
 
 You can run the above scaling tests as follows. 
 *  Weak scaling: The user can set the `BSSN_DENDRO_GRAIN_SZ` variable in the parameter file to control the approximate number of octants per core to be used in the weak scalability study. Please use the parameter file [q1_ws.par.json](BSSN_GR/experiment_scripts/ls6/q1-ws/q1_ws.par.json)
-   *  GPU : `mpirun -np <number of GPUs> ./BSSN GR/bssnWSTestCUDA q1_ws.par.json 1`. 
-   *  CPU : `mpirun -np <number of GPUs> ./BSSN GR/bssnScalingTest q1_ws.par.json 1`
+   *  GPU : `mpirun -np <number of GPUs> ./BSSN GR/bssnWSTestCUDA q1_ws.par.json 1`. Set parameter in the `BSSN_DENDRO_GRAIN_SZ` to 16000, (i.e., 16000 octants per GPU).
+   *  CPU : `mpirun -np <number of GPUs> ./BSSN GR/bssnScalingTest q1_ws.par.json 1`. Set parameter in the `BSSN_DENDRO_GRAIN_SZ` to 1000, (i.e., 1000 octants per CPU core).
    *  For CPU weak scaling the detailed profile output will be written in the `bssnCtx_WS_<number of CPUS>.txt` file, while for GPU runs these will be written in `bssnCtxGPU_WS_<number of CPUS>.txt` file. 
 *  Strong scaling: Please use the parameter file [q1_r2.2.par.json](BSSN_GR/experiment_scripts/ls6/q1-ss/q1_r2.2.par.json)
    * CPU : `mpirun -np <number of CPUs> ./BSSN_GR/bssnSolverCtx q1_r2.2.par.json 1` . The results are written in the `bssnCtx_<number of CPUs>.txt` file created relative to the executable directory. 
