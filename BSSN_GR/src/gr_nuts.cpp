@@ -298,8 +298,9 @@ int main (int argc, char** argv)
       if(!(ets->get_global_rank()))
         std::cout<<" ETS time (max) : "<<t2_g<<std::endl;
 
-      delete bssnCtx->get_mesh();    
+      ot::Mesh* tmp_mesh = bssnCtx->get_mesh();    
       delete bssnCtx;
+      delete tmp_mesh;
       delete ets;
 
     }

@@ -81,7 +81,7 @@ namespace bssn
 
         ot::dealloc_mpi_ctx<DendroScalar>(m_uiMesh, m_mpi_ctx, BSSN_NUM_VARS, BSSN_ASYNC_COMM_K);
         device::dealloc_mpi_ctx<DendroScalar>(m_uiMesh, m_mpi_ctx_device, BSSN_NUM_VARS , BSSN_ASYNC_COMM_K);
-        
+        m_mesh_cpu.dealloc_mesh_on_device(m_dptr_mesh);
         return;
     }
 
@@ -198,11 +198,11 @@ namespace bssn
             m_evar_unz.to_2d(unzipVar);
             //isRefine=this->is_remesh();
             // enforce WMAR refinement based refinement initially.
-            #ifdef BSSN_DISABLE_INITIAL_GRID_REFINEMENT
+            if(max_iter==0)
                 isRefine = false;
-            #else 
+            else
                 isRefine = bssn::isReMeshWAMR(m_uiMesh,(const double **)unzipVar,refineVarIds,bssn::BSSN_NUM_REFINE_VARS,waveletTolFunc,bssn::BSSN_DENDRO_AMR_FAC);
-            #endif
+            
             if(isRefine)
             {
                 ot::Mesh* newMesh = this->remesh(bssn::BSSN_DENDRO_GRAIN_SZ, bssn::BSSN_LOAD_IMB_TOL,bssn::BSSN_SPLIT_FIX);

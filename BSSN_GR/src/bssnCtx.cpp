@@ -382,11 +382,10 @@ namespace bssn
             m_evar_unz.to_2d(unzipVar);
             //isRefine=this->is_remesh();
             // enforce WMAR refinement based refinement initially. 
-            #ifdef BSSN_DISABLE_INITIAL_GRID_REFINEMENT
+            if(max_iter==0)
                 isRefine = false;
-            #else
+            else
                 isRefine = bssn::isReMeshWAMR(m_uiMesh,(const double **)unzipVar,refineVarIds,bssn::BSSN_NUM_REFINE_VARS,waveletTolFunc,bssn::BSSN_DENDRO_AMR_FAC);
-            #endif
             
             if(isRefine)
             {

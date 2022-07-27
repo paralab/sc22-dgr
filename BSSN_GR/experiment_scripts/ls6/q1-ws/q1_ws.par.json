@@ -45,7 +45,7 @@
 
     "__comment__" : "========== LOAD BALANCING & MESH ======================",
             "           " : "grain size N/p , Where N number of total octants, p number of active cores",
-            "BSSN_DENDRO_GRAIN_SZ": 1000,
+            "BSSN_DENDRO_GRAIN_SZ": 16000,
             "           " : "variable group size for the asynchronous unzip operation",
             "BSSN_ASYNC_COMM_K": 2,
             "           " : "dendro coarsening factor, corsent if computed wavelet tol < BSSN_DENDRO_AMR_FAC*BSSN_WAVELET_TOL ",
@@ -58,6 +58,8 @@
             "BSSN_MAXDEPTH": 12,
             "           " : "minimum level of refinement of the mesh",
             "BSSN_MINDEPTH": 3,
+            "              " : "weak scalabitlty study don't change the mesh once the desired grain size reached",
+            "BSSN_INIT_GRID_ITER":0,
     "__comment__" : "=======================================================",
 
 
