@@ -78,7 +78,26 @@ You can run the above scaling tests as follows.
    *  maximum allowed depth of the octree, tolerance value for refinement, partition tolerance (recommend to keep it at 0.1), order of interpolation for each octant (all the experiments used 6 order interpolations in the paper), flag 0 for CPU padding zone computations, flag 1 for GPU padding zone computations.
    *  CPU tests `mpirun -np <number of CPUs> ./run_meshgpu_tests 8 1e-3 0.1 6 0`
    *  GPU tests `mpirun -np <number of CPUs> ./run_meshgpu_tests 8 1e-3 0.1 6 1`
-   
+
+For scalability study runs please use the following to interpret the overall cost break down. All the timing results compute three statistics, minimum , mean and the maximum time across mpi ranks. 
+* `step_ets` : Number of timesteps performed for the profiling run.
+* `act_npes` : Active sub communicator from the global mpi communicator (for scaling runs this should match the global number of ranks). 
+* `glb_npes` : Global mpi communicator size. 
+* `maxdepth` : Maximum depth of the refinement used for the octree generatoin. 
+* `numOcts`  : Total number of octants (i.e., across all partitions)
+* `dof_cg`   : Total number of grid points (i.e., across all partitions)
+* `dof_uz`   : Total number of grid points after padding (i.e., across all partitions)
+* `gele_(min, mean , max)` :  (Min, mean, Max) of ghost octants across partitions. 
+* `lele_(min, mean , max)` :  (Min, mean, Max) of local octants across partitions. 
+* `lnodes_(min, mean, max)` :  (Min, mean, Max) of local grid points across partitions.
+* `remsh_igt(min, mean, max)`: (Min, mean, Max) of re-grid runtime across partitions.
+* `evolve_(min, mean, max)` :	 (Min, mean, Max) of total RK runtime for `step_ets` timesteps across partitions. For the plots presented in the paper, `evolve_max` is what is plotted in the paper for total RK runtime. 
+* `unzip_async(min, mean, max)`:  (Min, mean, Max) of `octant-to-patch`  computation with overlapped communication across partitions. 
+* `unzip_(min, mean, max)`: (Min, mean, Max) of `octant-to-patch`  computation without communication  across partitions. For the plots presented in the paper, `unzip` cost is the `unzip_max`. Because the MPI communication is overlapped with `octant-to-patch` computation, MPI communication `comm` cost is inferred with `comm = unzip_async_max  - unzip_max`
+* `rhs_(min, mean, max)`: (Min, mean, Max) of rhs computation cost across partitions. For the plots presented in the paper, `rhs` refers to the `rhs_max`.
+* `zip_async_(min, mean, max)`: (Min, mean, Max) of `patch-to-octant` cost across partitions. For the plots presented in the paper, `zip` refers to the `zip_max`.
+
+
 ### Running experiments with Singularity
 If you built Dendro-GR with Singularity, the following command can be used to launch the main BSSN solver and other benchmarks. 
 ```
