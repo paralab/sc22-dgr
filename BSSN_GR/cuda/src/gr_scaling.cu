@@ -234,20 +234,9 @@ int bssn_driver(MPI_Comm comm, unsigned int num_step,unsigned int warm_up, std::
       if(!(ets->get_global_rank()))
         std::cout<<" ETS time (max) : "<<t2_g<<std::endl;
 
-      if(bssn::BSSN_RESTORE_SOLVER==0)
-      {
-        if(pMesh == mesh)
-          delete mesh;
-        else
-        {
-          delete mesh;
-          delete pMesh;
-        }
-      }else
-      {
-        delete pMesh;
-      }   
+      ot::Mesh* tmp_mesh = bssnCtx->get_mesh();    
       delete bssnCtx;
+      delete tmp_mesh;
       delete ets;
 
     
